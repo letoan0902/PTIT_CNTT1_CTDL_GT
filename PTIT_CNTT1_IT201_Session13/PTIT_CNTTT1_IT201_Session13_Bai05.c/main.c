@@ -1,82 +1,85 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-typedef struct {
-    int *arr;
+typedef struct Stack{
+    char *arr;
     int top;
     int maxSize;
-} Stack;
+}Stack;
 
-Stack createStack(int maxSize) {
-    Stack stack;
-    stack.arr = (int*) malloc(maxSize * sizeof(int));
-    stack.top = -1;
-    stack.maxSize = maxSize;
-    return stack;
-}
+Stack* createStack(int size){
+    Stack* s = (Stack*)calloc(1,sizeof(Stack));
+    s->top=-1;
+    s->maxSize=size;
+    s->arr=(char*)calloc(size,sizeof(char));
+    return s;
+};
 
-void push(Stack *stack, int value) {
-    if (stack->top < stack->maxSize - 1) {
-        stack->top++;
-        stack->arr[stack->top] = value;
+int isEmpty(Stack* s){
+    if(s->top==-1){
+        return 1;
     } else {
-        printf("Ngan xep day, khong the them phan tu.\n");
+        return 0;
     }
 }
 
-int pop(Stack *stack) {
-    if (stack->top == -1) {
-        printf("No element in stack\n");
+int isFull(Stack* s){
+    if(s->top==s->maxSize){
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+void push(Stack* s, char value){
+    if(isFull(s)){
+        printf("Ngan xep day");
+        return;
+    }
+    s->top++;
+    s->arr[s->top]=value;
+}
+
+int pop(Stack* s){
+    if(isEmpty(s)){
+        printf("Ngan xep trong");
         return -1;
-    } else {
-        int value = stack->arr[stack->top];
-        stack->top--;
-        return value;
     }
+    return s->arr[s->top--];
 }
 
-void reverseArray(int *arr, int n) {
-    Stack stack = createStack(n);
-    for (int i = 0; i < n; i++) {
-        push(&stack, arr[i]);
+int checkDoiXung(char* string, int len){
+    Stack* s = createStack(len);
+    for (int i = 0; i < len; i++)
+    {
+        push(s,string[i]);
     }
-    for (int i = 0; i < n; i++) {
-        arr[i] = pop(&stack);
-    }
-    free(stack.arr);
-}
 
-void printArray(int *arr, int n) {
-    printf("[");
-    for (int i = 0; i < n; i++) {
-        printf("%d", arr[i]);
-        if (i < n - 1) {
-            printf(", ");
+    for (int i = 0; i < len; i++)
+    {
+        if(pop(s)!=string[i]){
+            return 0;
+            free(s->arr);
+            free(s);
         }
     }
-    printf("]\n");
+    
+    return 1;
+    free(s->arr);
+    free(s);
 }
 
-int main() {
-    int n;
-    printf("Nhap so phan tu: ");
-    scanf("%d", &n);
 
-    int *arr = (int*) malloc(n * sizeof(int));
-
-    printf("Nhap cac phan tu:\n");
-    for (int i = 0; i < n; i++) {
-        scanf("%d", &arr[i]);
+int main(){
+    char string[50];
+    printf("Nhap chuoi: ");
+    fgets(string,50,stdin);
+    string[strcspn(string,"\n")]='\0';
+    int len = strlen(string);
+    if(checkDoiXung(string, len)){
+        printf("Chuoi doi xung");
+    } else {
+        printf("Chuoi khong doi xung");
     }
-
-    printf("Mang ban dau: ");
-    printArray(arr, n);
-
-    reverseArray(arr, n);
-
-    printf("Mang sau khi dao nguoc: ");
-    printArray(arr, n);
-
-    free(arr);
-    return 0;
 }

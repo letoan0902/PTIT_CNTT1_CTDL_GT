@@ -2,6 +2,34 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "khaibaolopnhanvien",
+      "request": "launch",
+      "mainClass": "khaibaolopnhanvien",
+      "projectName": "CTDLGT_188aff1f"
+    },
+    {
+      "type": "java",
+      "name": "lopphanso",
+      "request": "launch",
+      "mainClass": "lopphanso",
+      "projectName": "CTDLGT_188aff1f"
+    },
+    {
+      "type": "java",
+      "name": "sapxepdayso",
+      "request": "launch",
+      "mainClass": "sapxepdayso",
+      "projectName": "CTDLGT_188aff1f"
+    },
+    {
+      "type": "java",
+      "name": "demo",
+      "request": "launch",
+      "mainClass": "demo",
+      "projectName": "CTDLGT_188aff1f"
+    },
+    {
       "name": "Debug C Program",
       "type": "cppdbg",
       "request": "launch",

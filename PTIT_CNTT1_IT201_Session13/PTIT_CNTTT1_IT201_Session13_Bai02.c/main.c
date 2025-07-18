@@ -1,56 +1,68 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct {
+typedef struct Stack{
     int *arr;
     int top;
     int maxSize;
-} Stack;
+}Stack;
 
-Stack createStack(int maxSize) {
-    Stack stack;
-    stack.arr = (int*) malloc(maxSize * sizeof(int));
-    stack.top = -1;
-    stack.maxSize = maxSize;
-    return stack;
-}
+Stack* createStack(int size){
+    Stack* s = (Stack*)calloc(1,sizeof(Stack));
+    s->top=-1;
+    s->maxSize=size;
+    s->arr=(int*)calloc(size,sizeof(int));
+    return s;
+};
 
-void push(Stack *stack, int value) {
-    if (stack->top < stack->maxSize - 1) {
-        stack->top++;
-        stack->arr[stack->top] = value;
+int isEmpty(Stack* s){
+    if(s->top==-1){
+        return 1;
     } else {
-        printf("Ngan xep day, khong the them phan tu.\n");
+        return 0;
     }
 }
 
-void printStack(Stack stack) {
-    printf("stack={\n");
-    printf("elements: [");
-    for (int i = 0; i <= stack.top; i++) {
-        printf("%d", stack.arr[i]);
-        if (i < stack.top) {
-            printf(", ");
-        }
+int isFull(Stack* s){
+    if(s->top==s->maxSize){
+        return 1;
+    } else {
+        return 0;
     }
-    printf("],\n");
-    printf("top: %d,\n", stack.top);
-    printf("cap: %d\n", stack.maxSize);
-    printf("}\n");
 }
 
-int main() {
-    int maxElements = 5;
-    Stack myStack = createStack(maxElements);
+void push(Stack* s, int value){
+    if(isFull(s)){
+        printf("Ngan xep day");
+        return;
+    }
+    s->top++;
+    s->arr[s->top]=value;
+}
 
-    printf("Nhap cac phan tu:\n");
-    for (int i = 0; i < maxElements; i++) {
-        int value;
-        scanf("%d", &value);
-        push(&myStack, value);
+int pop(Stack* s){
+    if(isEmpty(s)){
+        printf("Ngan xep trong");
+        return -1;
+    }
+    return s->arr[s->top--];
+}
+
+int main(){
+    int a[5]={0};
+    printf("Nhap 5 phan tu: ");
+    for (int i = 0; i < 5; i++)
+    {
+        scanf("%d",&a[i]);
+    }
+    Stack* s=createStack(5);
+    for (int i = 0; i < 5; i++)
+    {
+        push(s,a[i]);
     }
 
-    printStack(myStack);
-    free(myStack.arr);
-    return 0;
+    while(!isEmpty(s)){
+        printf("%d -> ",pop(s));
+    }
+    printf("NULL\n");
 }

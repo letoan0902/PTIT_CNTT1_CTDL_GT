@@ -1,71 +1,86 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
 #include <string.h>
+#include <stdlib.h>
 
-typedef struct {
-    char *arr;
+typedef struct Stack {
+    char* arr;
     int top;
     int maxSize;
-} Stack;
+}Stack;
 
-Stack createStack(int maxSize) {
-    Stack stack;
-    stack.arr = (char*) malloc(maxSize * sizeof(char));
-    stack.top = -1;
-    stack.maxSize = maxSize;
-    return stack;
+Stack* createStack(int size){
+    Stack* s = (Stack*)calloc(1,sizeof(Stack));
+    s->arr=(char*)calloc(size,sizeof(char));
+    s->top=-1;
+    s->maxSize=size;
+    return s;
 }
 
-void push(Stack *stack, char value) {
-    if (stack->top < stack->maxSize - 1) {
-        stack->top++;
-        stack->arr[stack->top] = value;
-    } else {
-        printf("Ngan xep day, khong the them phan tu.\n");
+int isEmpty(Stack* s){
+    if(s->top==-1){
+        return 1;
     }
+    return 0;
 }
 
-char pop(Stack *stack) {
-    if (stack->top == -1) {
-        printf("No element in stack\n");
+int isFull(Stack* s){
+    if(s->maxSize-1==s->top){
+        return 1;
+    }
+    return 0;
+}
+
+void push(Stack* s, char value){
+    if(isFull(s)){
+        printf("Ngan xep day");
+        return;
+    }
+    s->arr[++s->top]=value;
+}
+
+char pop(Stack* s){
+    if(isEmpty(s)){
+        printf("Ngan xep trong");
         return '\0';
-    } else {
-        char value = stack->arr[stack->top];
-        stack->top--;
-        return value;
     }
+    return s->arr[s->top--];
 }
 
-bool isPalindrome(char *str) {
-    int len = strlen(str);
-    Stack stack = createStack(len);
-    for (int i = 0; i < len; i++) {
-        push(&stack, str[i]);
-    }
-    for (int i = 0; i < len; i++) {
-        char c = pop(&stack);
-        if (str[i] != c) {
-            free(stack.arr);
-            return false;
+void checkBieuThuc(char* str, int len){
+    Stack* s=createStack(len);
+    for (int i = 0; i < len; i++){
+        if(str[i]=='{'||str[i]=='['||str[i]=='('){
+            push(s,str[i]);
+        }else if(str[i]=='}'){
+            if(!isEmpty(s) &&s->arr[s->top]=='{'){
+                pop(s);
+            }
+        }else if(str[i]==']'){
+            if(!isEmpty(s) &&s->arr[s->top]=='['){
+                pop(s);
+            }
+        }else if(str[i]==')'){
+            if(!isEmpty(s) &&s->arr[s->top]=='('){
+                pop(s);
+            }
         }
     }
-    free(stack.arr);
-    return true;
+    if(isEmpty(s)){
+        printf("True");
+    }else {
+        printf("False");
+    }
+    free(s->arr);
+    free(s);
 }
 
-int main() {
-    char str[100];
-    printf("Nhap chuoi: ");
-    fgets(str, sizeof(str), stdin);
-    size_t len = strlen(str);
-    if (len > 0 && str[len - 1] == '\n') {
-        str[len - 1] = '\0';
-    }
-    if (isPalindrome(str)) {
-        printf("true\n");
-    } else {
-        printf("false\n");
-    }
+
+int main(){
+    char str[50];
+    printf("Nhap bieu thuc: ");
+    fgets(str,50,stdin);
+    str[strcspn(str,"\n")]='\0';
+    int len = strlen(str);
+    checkBieuThuc(str,len);
     return 0;
 }
